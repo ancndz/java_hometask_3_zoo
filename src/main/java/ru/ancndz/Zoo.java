@@ -32,20 +32,22 @@ public class Zoo {
     }
 
     //считаем что ккординаты приходят разные, если человек просто стоит - ничего не приходит
-    public void getGeoUpdate(Tracked tracked, double x, double y) {
+    public void getGeoUpdate(Tracked trackedEntity, double x, double y) {
         //пройденное расстояние
-        double moveMeters = tracked.getShift(x, y);
+        double moveMeters = trackedEntity.getShift(x, y);
         //создали запись
-        RegTrack track = new RegTrack(tracked, moveMeters);
+        RegTrack track = new RegTrack(trackedEntity, moveMeters);
+        //ставим метку, в зоопарке энтити или нет
+        track.setInZoo(trackedEntity.isInZoo());
         //получаем новые координаты
-        double[] trackedCords = tracked.getCords();
-        //получаем список всех отслеживаемых
+        double[] trackedCords = trackedEntity.getCords();
+        //получаем список всех отслеживаемых что бы пройтись по ним
         HashSet<Tracked> allTracked = new HashSet<>(this.animals);
         allTracked.addAll(this.staff);
 
         for (Tracked each : allTracked) {
             //сам с собой не считается)
-            if (!tracked.equals(each)) {
+            if (!trackedEntity.equals(each)) {
                 //берем кординаты каждого
                 double[] eachCords = each.getCords();
                 //проверяем взаимодействие
@@ -55,15 +57,15 @@ public class Zoo {
                     //время начала взаимодействия
                     track.setDateInteractionStart(new Date());
                     //добавили каждому, что он в контакте сейчас
-                    each.addInteracted(tracked);
-                    tracked.addInteracted(each);
+                    each.addInteracted(trackedEntity);
+                    trackedEntity.addInteracted(each);
                     //если в контакте и отдалился (закончился контакт)
-                } else if (tracked.getInteractionSet().contains(each)) {
+                } else if (trackedEntity.getInteractionSet().contains(each)) {
                     //добавляем дату конца взаимодействия
                     track.setDateInteractionEnd(new Date());
                     //удаляем из листов взаимодействия
-                    tracked.delInteracted(each);
-                    each.delInteracted(tracked);
+                    trackedEntity.delInteracted(each);
+                    each.delInteracted(trackedEntity);
                 }
             }
         }

@@ -54,12 +54,18 @@ class ZooTest {
     void testOnWork() {
         //Gordon
         Tracked testEntity = this.zoo.getStaffPerson("Gordon");
-
+        //прямая проверка
         this.zoo.getGeoUpdate(testEntity, +4, -1);
         assertTrue(this.zoo.getStaffPerson("Gordon").isInZoo());
         //обратная проверка
         this.zoo.getGeoUpdate(testEntity, -1000, -1000);
         assertFalse(this.zoo.getStaffPerson("Gordon").isInZoo());
+
+        //проверка наличия записи что кто-то покинул карантин(зачеркнуто) зоопарк
+        //false - покинул
+        assertFalse(this.zoo.getTrackList().get(1).isInZoo());
+        //обратная
+        assertTrue(this.zoo.getTrackList().get(0).isInZoo());
     }
 
     @Test

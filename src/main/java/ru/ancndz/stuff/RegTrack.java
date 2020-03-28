@@ -8,6 +8,7 @@ public class RegTrack {
     Date dateInteractionStart;
     Date dateInteractionEnd;
     double movedMeters;
+    boolean inZoo;
 
     HashSet<Tracked> interactedList = new HashSet<>();
 
@@ -36,10 +37,12 @@ public class RegTrack {
         return this.object;
     }
 
-    public String getInfo() {
-        return "Передвижение: \nID: " + this.object.getGeoID() +
-                "\nРасстояние: " + this.movedMeters +
-                "\nDateStart: " + this.dateInteractionStart +
-                "\nDateEnd: " + this.dateInteractionEnd;
+    public boolean isInZoo() {
+        return inZoo;
     }
+
+    public void setInZoo(boolean inZoo) {
+        this.inZoo = inZoo;
+    }
+
 }
