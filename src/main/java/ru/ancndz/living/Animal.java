@@ -23,6 +23,7 @@ public class Animal implements Tracked {
     private String extra; // дополнительно о животном
     private List<Staff> careStaff = new ArrayList<>();
     private Journal journal = null;
+    private boolean inZoo = true;
 
     public void setJournal(Journal journal) {
         this.journal = journal;
@@ -127,6 +128,7 @@ public class Animal implements Tracked {
     public double getShift(double OX, double OY) {
         this.cordOX += OX;
         this.cordOY += OY;
+        this.inZoo = (this.cordOX >= 0 && this.cordOX <= 100 && this.cordOY >= -100 && this.cordOY <= 100);
         return Math.sqrt(Math.pow(OX, 2) + Math.pow(OY, 2));
     }
 
@@ -152,5 +154,10 @@ public class Animal implements Tracked {
     @Override
     public HashSet<Tracked> getInteractionSet() {
         return this.inIteraction;
+    }
+
+    @Override
+    public boolean isInZoo() {
+        return this.inZoo;
     }
 }

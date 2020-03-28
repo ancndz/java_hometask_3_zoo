@@ -11,4 +11,6 @@ public interface Tracked {
     void addInteracted(Tracked person);
     void delInteracted(Tracked person);
     HashSet<Tracked> getInteractionSet();
+
+    boolean isInZoo();
 }

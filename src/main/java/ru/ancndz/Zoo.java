@@ -16,12 +16,16 @@ public class Zoo {
     private List<RegTrack> trackList = new ArrayList<>();
 
     private String title;
-    private List<Animal> animals;
-    private List<Staff> staff;
-    private List<Journal> journals;
+    private List<Animal> animals = new ArrayList<>();
+    private List<Staff> staff = new ArrayList<>();
+    private List<Journal> journals = new ArrayList<>();
+
+    public Zoo(String title) {
+        this.title = title;
+    }
 
     public Zoo(String title, List<Animal> animals, List<Staff> staff, List<Journal> journals) {
-        this.title = title;
+        this(title);
         this.animals = animals;
         this.staff = staff;
         this.journals = journals;
@@ -84,6 +88,7 @@ public class Zoo {
 
     public void addAnimal(Animal animal) {
         this.animals.add(animal);
+        this.journals.add(new Journal(animal));
     }
 
     //при удалении животного сначала чистится это животное у каждого работника из списка заботы
@@ -106,6 +111,24 @@ public class Zoo {
 
     public List<Staff> getStaff() {
         return staff;
+    }
+
+    public Staff getStaffPerson(String name) {
+        for (Staff each : this.staff) {
+            if (each.getName().equals(name)) {
+                return each;
+            }
+        }
+        return null;
+    }
+
+    public Animal getAnimalByName(String name) {
+        for (Animal each : this.animals) {
+            if (each.getName().equals(name)) {
+                return each;
+            }
+        }
+        return null;
     }
 
     public List<Journal> getJournals() {

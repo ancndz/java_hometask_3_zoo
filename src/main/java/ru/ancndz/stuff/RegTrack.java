@@ -29,10 +29,17 @@ public class RegTrack {
     }
 
     public HashSet<Tracked> getInteractedList() {
-        return interactedList;
+        return this.interactedList;
     }
 
     public Tracked getObject() {
-        return object;
+        return this.object;
+    }
+
+    public String getInfo() {
+        return "Передвижение: \nID: " + this.object.getGeoID() +
+                "\nРасстояние: " + this.movedMeters +
+                "\nDateStart: " + this.dateInteractionStart +
+                "\nDateEnd: " + this.dateInteractionEnd;
     }
 }

@@ -4,42 +4,86 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.ancndz.living.Animal;
 import ru.ancndz.living.Staff;
-import ru.ancndz.stuff.Journal;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.ancndz.stuff.Tracked;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ZooTest {
 
+    private Zoo zoo;
+
     @BeforeEach
     void setUp() {
-        List<Animal> zooAnimals = new ArrayList<>();
-        List<Journal> zooJournals = new ArrayList<>();
+        Animal johnBird = new Animal("bird", "jonathan livingston", "2 years");
+        Animal eddieFish = new Animal("fish", "Clown Eddie", "1.2 years");
+        Animal SnowBear = new Animal("bear", "Snowball", "5 years");
 
-        zooAnimals.add(new Animal("bird", "jonathan livingston", "2 years"));
-        zooJournals.add(new Journal(zooAnimals.get(0)));
-        zooAnimals.add(new Animal("fish", "Clown Eddie", "1.2 years"));
-        zooJournals.add(new Journal(zooAnimals.get(1)));
-        zooAnimals.add(new Animal("bear", "Snowball", "5 years"));
-        zooJournals.add(new Journal(zooAnimals.get(2)));
+        this.zoo = new Zoo("Z-O(3)");
+        //теперь журнал создается сам при вызове этой функции
+        this.zoo.addAnimal(johnBird);
+        this.zoo.addAnimal(eddieFish);
+        this.zoo.addAnimal(SnowBear);
 
-        List<Staff> zooStaff = new ArrayList<>();
+        Staff alexStaff = new Staff("Alex", 6, "Birds");
+        Staff johnStaff = new Staff("John", "Animals");
+        Staff gordonStaff = new Staff("Gordon", 24, "Birds");
+        Staff bobStaff = new Staff("Bob", 15, "Fish");
 
-        zooStaff.add(new Staff("Person 1", 10, "Birds"));
-        zooStaff.add(new Staff("Person 2", 10, "Birds"));
-        zooStaff.add(new Staff("Person 3", 10, "Birds"));
-        zooStaff.add(new Staff("Person 4", 10, "Birds"));
+        this.zoo.addStaff(alexStaff);
+        this.zoo.addStaff(johnStaff);
+        this.zoo.addStaff(gordonStaff);
+        this.zoo.addStaff(bobStaff);
 
-        Zoo zoo = new Zoo("Z-O(3)", zooAnimals, zooStaff, zooJournals);
     }
 
     @Test
-    void getGeoUpdate() {
+    void testGetStaffPerson() {
+        assertEquals(this.zoo.getStaff().get(0), this.zoo.getStaffPerson("Alex"));
+        assertEquals(this.zoo.getStaff().get(2), this.zoo.getStaffPerson("Gordon"));
+        assertNotEquals(this.zoo.getStaff().get(0), this.zoo.getStaffPerson("Bob"));
     }
 
     @Test
-    void getTrackList() {
+    void testGetAnimalByName() {
+        assertEquals(this.zoo.getAnimals().get(1), this.zoo.getAnimalByName("Clown Eddie"));
+        assertEquals(this.zoo.getAnimals().get(2), this.zoo.getAnimalByName("Snowball"));
+        assertNotEquals(this.zoo.getAnimals().get(0), this.zoo.getAnimalByName("Snowball"));
     }
+
+    @Test
+    void testOnWork() {
+        //Gordon
+        Tracked testEntity = this.zoo.getStaffPerson("Gordon");
+
+        this.zoo.getGeoUpdate(testEntity, +4, -1);
+        assertTrue(this.zoo.getStaffPerson("Gordon").isInZoo());
+        //обратная проверка
+        this.zoo.getGeoUpdate(testEntity, -1000, -1000);
+        assertFalse(this.zoo.getStaffPerson("Gordon").isInZoo());
+    }
+
+    @Test
+    void testGetGeoUpdate() {
+        //Gordon
+        Tracked testEntity = this.zoo.getStaffPerson("Gordon");
+        this.zoo.getGeoUpdate(testEntity, +4, -5);
+
+        Tracked testAnimal = this.zoo.getAnimalByName("Snowball");
+        this.zoo.getGeoUpdate(testAnimal, 1, -8);
+
+        //проверка координат
+        assertEquals(this.zoo.getStaffPerson("Gordon").getCords()[0], 4);
+
+        //заполнение журнала
+        assertEquals(this.zoo.getTrackList().get(0).getObject().getGeoID(), testEntity.getGeoID());
+
+        //проверка на контакт
+        //get(1)  - передвижение снежка, у этой записи берем лист с кем он контактировал
+        assertTrue(this.zoo.getTrackList().get(1).getInteractedList().contains(testEntity));
+
+        //обратная проверка
+        this.zoo.getGeoUpdate(testAnimal, 10, -7);
+        assertFalse(this.zoo.getTrackList().get(2).getInteractedList().contains(testEntity));
+    }
+
 }

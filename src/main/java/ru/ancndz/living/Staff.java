@@ -11,7 +11,9 @@ public class Staff implements Tracked {
 
     private double cordOX = 0;
     private double cordOY = 0;
-    private HashSet<Tracked> inIteraction = new HashSet<>();
+    private HashSet<Tracked> inInteraction = new HashSet<>();
+
+    private boolean inZoo = true;
 
     private String name;
     private int expMonths = 0;
@@ -76,6 +78,10 @@ public class Staff implements Tracked {
         return careAnimals;
     }
 
+    public boolean isInZoo() {
+        return inZoo;
+    }
+
     @Override
     public double getGeoID() {
         return this.geoID;
@@ -86,6 +92,7 @@ public class Staff implements Tracked {
     public double getShift(double OX, double OY) {
         this.cordOX += OX;
         this.cordOY += OY;
+        this.inZoo = (this.cordOX >= 0 && this.cordOX <= 100 && this.cordOY >= -100 && this.cordOY <= 100);
         return Math.sqrt(Math.pow(OX, 2) + Math.pow(OY, 2));
     }
 
@@ -97,19 +104,19 @@ public class Staff implements Tracked {
 
     @Override
     public void addInteracted(Tracked person) {
-        this.inIteraction.add(person);
+        this.inInteraction.add(person);
     }
 
     @Override
     public void delInteracted(Tracked person) {
         try {
-            this.inIteraction.remove(person);
+            this.inInteraction.remove(person);
         } catch (Exception ignored) {
         }
     }
 
     @Override
     public HashSet<Tracked> getInteractionSet() {
-        return this.inIteraction;
+        return this.inInteraction;
     }
 }
